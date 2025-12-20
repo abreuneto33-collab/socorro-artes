@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import { LayoutDashboard, BookOpen, PieChart, PlusCircle, Menu, X, LogOut } from 'lucide-react'
+import { LayoutDashboard, BookOpen, PieChart, PlusCircle, Menu, X, LogOut, Package, Scissors } from 'lucide-react'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
