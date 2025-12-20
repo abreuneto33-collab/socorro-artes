@@ -84,17 +84,27 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <p className="text-xs text-fuchsia-300">Painel Gerencial</p>
               </div>
               
-              <nav className="flex-1 py-6 space-y-2">
-                <Link href="/" onClick={() => setIsMobileOpen(false)} className="flex items-center gap-4 px-8 py-3 hover:bg-fuchsia-800 transition-colors">
-                  <LayoutDashboard size={20} /> Geral
-                </Link>
-                <Link href="/notas" onClick={() => setIsMobileOpen(false)} className="flex items-center gap-4 px-8 py-3 hover:bg-fuchsia-800 transition-colors">
-                  <BookOpen size={20} /> Caderno
-                </Link>
-                <Link href="/relatorios" onClick={() => setIsMobileOpen(false)} className="flex items-center gap-4 px-8 py-3 hover:bg-fuchsia-800 transition-colors">
-                  <PieChart size={20} /> Relatórios
-                </Link>
-              </nav>
+             <nav className="flex-1 py-6 space-y-1">
+  <Link href="/" onClick={() => setIsMobileOpen(false)} className="flex items-center gap-4 px-8 py-3 hover:bg-fuchsia-800 transition-colors border-l-4 border-transparent hover:border-white">
+    <LayoutDashboard size={20} /> Geral
+  </Link>
+  
+  <Link href="/produtos" onClick={() => setIsMobileOpen(false)} className="flex items-center gap-4 px-8 py-3 hover:bg-fuchsia-800 transition-colors border-l-4 border-transparent hover:border-white">
+    <Package size={20} /> Produtos
+  </Link>
+
+  <Link href="/materiais" onClick={() => setIsMobileOpen(false)} className="flex items-center gap-4 px-8 py-3 hover:bg-fuchsia-800 transition-colors border-l-4 border-transparent hover:border-white">
+    <Scissors size={20} /> Materiais
+  </Link>
+
+  <Link href="/notas" onClick={() => setIsMobileOpen(false)} className="flex items-center gap-4 px-8 py-3 hover:bg-fuchsia-800 transition-colors border-l-4 border-transparent hover:border-white">
+    <BookOpen size={20} /> Caderno
+  </Link>
+  
+  <Link href="/relatorios" onClick={() => setIsMobileOpen(false)} className="flex items-center gap-4 px-8 py-3 hover:bg-fuchsia-800 transition-colors border-l-4 border-transparent hover:border-white">
+    <PieChart size={20} /> Relatórios
+  </Link>
+</nav>
 
               <div className="p-6 space-y-4">
                 <Link href="/novo-pedido" onClick={() => setIsMobileOpen(false)} className="flex items-center justify-center gap-2 bg-white text-fuchsia-900 w-full py-3 rounded-lg font-bold shadow-lg hover:bg-fuchsia-100 transition-colors">
