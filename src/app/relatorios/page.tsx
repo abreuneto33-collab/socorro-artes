@@ -129,10 +129,11 @@ export default function Reports() {
                 tickFormatter={(value) => `R$${value}`}
               />
               <Tooltip 
-                cursor={{fill: '#fdf4ff'}}
-                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                formatter={(value: number) => [`R$ ${value.toFixed(2)}`, 'Vendido']}
-              />
+  cursor={{fill: '#fdf4ff'}}
+  contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+  // CORREÇÃO AQUI: Troquei 'number' por 'any' e adicionei Number() por segurança
+  formatter={(value: any) => [`R$ ${Number(value).toFixed(2)}`, 'Vendido']}
+/>
               <Bar dataKey="total" radius={[4, 4, 0, 0]} barSize={50}>
                 {chartData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill="#a21caf" />
