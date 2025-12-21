@@ -10,19 +10,22 @@ export default function Notes() {
 
   useEffect(() => {
     async function fetchAll() {
-      // Pega tudo, do mais recente pro mais antigo
-      const { data } = await supabase.from('orders').select('*').order('created_at', { ascending: false })
+      // CORREÇÃO: Busca fazendo a ligação com a tabela 'clients'
+      const { data } = await supabase
+        .from('orders')
+        .select('*, clients(name)')
+        .order('created_at', { ascending: false })
+      
       if (data) setOrders(data)
     }
     fetchAll()
   }, [])
 
   const downloadCSV = () => {
-    const header = ["Data,Cliente,Produto,Valor Total,Status,Observacao"];
+    const header = ["Data,Cliente,Total,Status,Obs"];
     const rows = orders.map(o => [
         format(parseISO(o.created_at), 'dd/MM/yyyy'),
-        o.client_name,
-        o.description,
+        o.clients?.name || 'Cliente deletado',
         o.total_price,
         o.is_delivered ? "Entregue" : "Pendente",
         o.observation || ""
@@ -31,13 +34,14 @@ export default function Notes() {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "todas_as_notas.csv");
+    link.setAttribute("download", "caderno_encomendas.csv");
     document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
   }
 
-  const filtered = orders.filter(o => o.client_name.toLowerCase().includes(search.toLowerCase()) || o.description.toLowerCase().includes(search.toLowerCase()))
+  const filtered = orders.filter(o => 
+    o.clients?.name.toLowerCase().includes(search.toLowerCase())
+  )
 
   return (
     <div className="space-y-6">
@@ -46,22 +50,16 @@ export default function Notes() {
            <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
              <FileText className="text-fuchsia-700" /> Caderno de Encomendas
            </h2>
-           <p className="text-gray-500 text-sm">Registro completo de todos os pedidos da história</p>
         </div>
-        <button onClick={downloadCSV} className="bg-gray-900 text-white px-5 py-2 rounded-lg flex items-center gap-2 text-sm font-medium hover:bg-black">
-          <Download size={16} /> Baixar Tudo
+        <button onClick={downloadCSV} className="bg-gray-900 text-white px-5 py-2 rounded-lg flex items-center gap-2 text-sm font-medium">
+          <Download size={16} /> Baixar
         </button>
       </div>
 
       <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
         <div className="relative mb-4">
           <Search className="absolute left-3 top-3 text-gray-400" size={20} />
-          <input 
-            type="text" 
-            placeholder="Pesquisar no caderno..." 
-            className="w-full pl-10 p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-fuchsia-600 outline-none"
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          <input type="text" placeholder="Pesquisar..." className="w-full pl-10 p-3 rounded-lg border focus:ring-2 focus:ring-fuchsia-600 outline-none" onChange={(e) => setSearch(e.target.value)} />
         </div>
 
         <div className="overflow-x-auto">
@@ -70,8 +68,7 @@ export default function Notes() {
               <tr>
                 <th className="p-3">Data</th>
                 <th className="p-3">Cliente</th>
-                <th className="p-3">Descrição</th>
-                <th className="p-3">Valor</th>
+                <th className="p-3">Valor Total</th>
                 <th className="p-3">Status</th>
               </tr>
             </thead>
@@ -79,8 +76,7 @@ export default function Notes() {
               {filtered.map(order => (
                 <tr key={order.id} className="hover:bg-gray-50">
                   <td className="p-3 text-gray-500">{format(parseISO(order.created_at), "dd/MM/yy")}</td>
-                  <td className="p-3 font-medium text-gray-900">{order.client_name}</td>
-                  <td className="p-3 text-gray-600">{order.quantity}x {order.description}</td>
+                  <td className="p-3 font-bold text-gray-900">{order.clients?.name}</td>
                   <td className="p-3 font-medium">R$ {order.total_price.toFixed(2)}</td>
                   <td className="p-3">
                     {order.is_delivered 
